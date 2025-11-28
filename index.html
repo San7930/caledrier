@@ -535,7 +535,7 @@
     const messageInfo = document.getElementById('message-info');
     const cases = document.querySelectorAll('.case-jour');
     const now = new Date();
-    // const currentMonth = now.getMonth(); // 0 = janvier, 11 = décembre
+    const currentMonth = now.getMonth(); // 0 = janvier, 11 = décembre
     const currentDay = now.getDate();
 
     // Si on n'est pas en décembre, on bloque tout le calendrier
