@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier de l'Avent 2025</title>
+    
+    <style>
+        /* ============================================
+           INSTRUCTIONS DE PERSONNALISATION
+           ============================================
+           - Couleurs : modifier les variables CSS ci-dessous
+           - Images : remplacer les chemins dans chaque jour01.html à jour24.html
+           - Textes : éditer le contenu dans chaque page individuelle
+           - Date actuelle : modifier la variable currentDay dans le script
+           ============================================ */
+        
+        /* Variables de couleurs pour faciliter la personnalisation */
+        :root {
+            --couleur-noel-rouge: #c41e3a;
+            --couleur-noel-vert: #165b33;
+            --couleur-noel-dore: #d4af37;
+            --couleur-fond: #f8f4f0;
+            --couleur-texte: #2c2c2c;
+            --couleur-hover: #8b0000;
+            --couleur-gris: #9e9e9e;
+        }
+        
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, var(--couleur-fond) 0%, #fff5e6 100%);
+            color: var(--couleur-texte);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+        }
+        
+        /* En-tête principal */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--couleur-noel-rouge);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            animation: textGlow 3s ease-in-out infinite;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: var(--couleur-noel-vert);
+            font-style: italic;
+        }
+        
+        /* Décoration en haut */
+        .decoration {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* Conteneur de la grille */
+        .calendrier-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Grille CSS Grid avec tailles variables */
+        .grille-calendrier {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-auto-rows: 100px;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Chaque case du calendrier - style de base */
+        .case-jour {
+            position: relative;
+            background: linear-gradient(135deg, var(--couleur-noel-rouge) 0%, var(--couleur-hover) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            overflow: hidden;
+            border: 3px solid var(--couleur-noel-dore);
+        }
+        
+        /* Tailles variées pour créer un aspect authentique */
+        .case-jour:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(5) {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(7) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .case-jour:nth-child(10) {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(12) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(14) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .case-jour:nth-child(16) {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(18) {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
+        .case-jour:nth-child(20) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(22) {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+        
+        .case-jour:nth-child(24) {
+            grid-column: span 3;
+            grid-row: span 2;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--couleur-noel-dore) 0%, #b8860b 100%);
+        }
+        
+        /* ============================================
+           ÉTATS DES CASES : VERROUILLÉES / OUVERTES
+           ============================================ */
+        
+        /* Case verrouillée (jour futur) */
+        .case-jour.locked {
+            background: linear-gradient(135deg, var(--couleur-gris) 0%, #757575 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .case-jour.locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        /* Case déjà ouverte (jour visité) */
+        .case-jour.opened {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            border-color: #81c784;
+            opacity: 0.85;
+        }
+        
+        .case-jour.opened::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: checkmark 0.5s ease-out;
+        }
+        
+        /* Animation du checkmark */
+        @keyframes checkmark {
+            0% {
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(0deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        /* Effet de "déchirement" quand on ouvre une case */
+        .case-jour.opening {
+            animation: openCase 0.6s ease-out forwards;
+        }
+        
+        @keyframes openCase {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+            30% {
+                transform: scale(1.1) rotate(5deg);
+            }
+            60% {
+                transform: scale(0.95) rotate(-3deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        
+        /* Effet de texture sur les cases */
+        .case-jour::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shine 6s ease-in-out infinite;
+        }
+        
+        /* Numéro du jour */
+        .case-jour span {
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Effet hover : uniquement pour les cases disponibles */
+        .case-jour:not(.locked):not(.opened):hover {
+            transform: scale(1.05) rotate(1deg);
+            background: linear-gradient(135deg, var(--couleur-noel-vert) 0%, #0d3d20 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        
+        .case-jour:nth-child(24):not(.locked):not(.opened):hover {
+            background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+        }
+        
+        /* Focus visible pour l'accessibilité */
+        .case-jour:focus {
+            outline: 4px solid var(--couleur-noel-dore);
+            outline-offset: 4px;
+            z-index: 10;
+        }
+        
+        /* Animation de scintillement pour le titre */
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                text-shadow: 2px 2px 8px rgba(212, 175, 55, 0.5), 0 0 15px rgba(212, 175, 55, 0.3);
+            }
+        }
+        
+        /* Animation de flottement pour la décoration */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+        
+        /* Animation d'apparition */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animation de brillance sur les cases */
+        @keyframes shine {
+            0%, 100% {
+                transform: rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        
+        /* Pied de page */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--couleur-noel-vert);
+            font-size: 0.9rem;
+        }
+        
+        /* Message pour les jours verrouillés */
+        .message-info {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            color: var(--couleur-noel-vert);
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        
+        @media (max-width: 900px) {
+            .grille-calendrier {
+                grid-template-columns: repeat(4, 1fr);
+                grid-auto-rows: 90px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .case-jour {
+                font-size: 1.5rem;
+            }
+            
+            .case-jour:nth-child(24) {
+                font-size: 2rem;
+            }
+            
+            .case-jour.locked::after,
+            .case-jour.opened::after {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .grille-calendrier {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 80px;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .case-jour {
+                font-size: 1.3rem;
+                border: 2px solid var(--couleur-noel-dore);
+            }
+            
+            .decoration {
+                font-size: 2rem;
+            }
+            
+            .case-jour:nth-child(1),
+            .case-jour:nth-child(12),
+            .case-jour:nth-child(20) {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+            
+            .case-jour:nth-child(24) {
+                grid-column: span 3;
+                grid-row: span 2;
+                font-size: 1.8rem;
+            }
+            
+            .case-jour.locked::after,
+            .case-jour.opened::after {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .grille-calendrier {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 70px;
+            }
+            
+            .case-jour:nth-child(24) {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête du calendrier -->
+    <header class="header">
+        <div class="decoration">⭐🎄✨</div>
+        <h1>Calendrier de l'Avent 2025</h1>
+        <p>Découvrez une surprise chaque jour jusqu'à Noël !</p>
+    </header>
+    
+    <!-- Conteneur principal du calendrier -->
+    <main class="calendrier-container">
+        <div class="grille-calendrier" id="calendrier">
+            <!-- Jour 1 à 24 : générés dynamiquement avec JavaScript -->
+            <a href="jour01.html" class="case-jour" data-jour="1" aria-label="Ouvrir le jour 1">
+                <span>1</span>
+            </a>
+            <a href="jour02.html" class="case-jour" data-jour="2" aria-label="Ouvrir le jour 2">
+                <span>2</span>
+            </a>
+            <a href="jour03.html" class="case-jour" data-jour="3" aria-label="Ouvrir le jour 3">
+                <span>3</span>
+            </a>
+            <a href="jour04.html" class="case-jour" data-jour="4" aria-label="Ouvrir le jour 4">
+                <span>4</span>
+            </a>
+            <a href="jour05.html" class="case-jour" data-jour="5" aria-label="Ouvrir le jour 5">
+                <span>5</span>
+            </a>
+            <a href="jour06.html" class="case-jour" data-jour="6" aria-label="Ouvrir le jour 6">
+                <span>6</span>
+            </a>
+            <a href="jour07.html" class="case-jour" data-jour="7" aria-label="Ouvrir le jour 7">
+                <span>7</span>
+            </a>
+            <a href="jour08.html" class="case-jour" data-jour="8" aria-label="Ouvrir le jour 8">
+                <span>8</span>
+            </a>
+            <a href="jour09.html" class="case-jour" data-jour="9" aria-label="Ouvrir le jour 9">
+                <span>9</span>
+            </a>
+            <a href="jour10.html" class="case-jour" data-jour="10" aria-label="Ouvrir le jour 10">
+                <span>10</span>
+            </a>
+            <a href="jour11.html" class="case-jour" data-jour="11" aria-label="Ouvrir le jour 11">
+                <span>11</span>
+            </a>
+            <a href="jour12.html" class="case-jour" data-jour="12" aria-label="Ouvrir le jour 12">
+                <span>12</span>
+            </a>
+            <a href="jour13.html" class="case-jour" data-jour="13" aria-label="Ouvrir le jour 13">
+                <span>13</span>
+            </a>
+            <a href="jour14.html" class="case-jour" data-jour="14" aria-label="Ouvrir le jour 14">
+                <span>14</span>
+            </a>
+            <a href="jour15.html" class="case-jour" data-jour="15" aria-label="Ouvrir le jour 15">
+                <span>15</span>
+            </a>
+            <a href="jour16.html" class="case-jour" data-jour="16" aria-label="Ouvrir le jour 16">
+                <span>16</span>
+            </a>
+            <a href="jour17.html" class="case-jour" data-jour="17" aria-label="Ouvrir le jour 17">
+                <span>17</span>
+            </a>
+            <a href="jour18.html" class="case-jour" data-jour="18" aria-label="Ouvrir le jour 18">
+                <span>18</span>
+            </a>
+            <a href="jour19.html" class="case-jour" data-jour="19" aria-label="Ouvrir le jour 19">
+                <span>19</span>
+            </a>
+            <a href="jour20.html" class="case-jour" data-jour="20" aria-label="Ouvrir le jour 20">
+                <span>20</span>
+            </a>
+            <a href="jour21.html" class="case-jour" data-jour="21" aria-label="Ouvrir le jour 21">
+                <span>21</span>
+            </a>
+            <a href="jour22.html" class="case-jour" data-jour="22" aria-label="Ouvrir le jour 22">
+                <span>22</span>
+            </a>
+            <a href="jour23.html" class="case-jour" data-jour="23" aria-label="Ouvrir le jour 23">
+                <span>23</span>
+            </a>
+            <a href="jour24.html" class="case-jour" data-jour="24" aria-label="Ouvrir le jour 24">
+                <span>24</span>
+            </a>
+        </div>
+        
+        <div class="message-info" id="message-info"></div>
+    </main>
+    
+    <!-- Pied de page -->
+    <footer class="footer">
+        <p>🎅 Joyeux Noël ! 🎁 © 2025 - Calendrier de l'Avent</p>
+    </footer>
+
+    <script>
+    /* ============================================
+       SCRIPT DE GESTION DU CALENDRIER
+       ============================================
+       Ce script gère :
+       - Le verrouillage des jours futurs (avec cadenas)
+       - L'ouverture et la mémorisation des jours visités
+       - Les animations d'ouverture
+       - Le blocage total si on n'est pas en décembre
+       ============================================ */
+
+    const messageInfo = document.getElementById('message-info');
+    const cases = document.querySelectorAll('.case-jour');
+    const now = new Date();
+    // const currentMonth = now.getMonth(); // 0 = janvier, 11 = décembre
+    const currentDay = now.getDate();
+
+    // Si on n'est pas en décembre, on bloque tout le calendrier
+    if (currentMonth !== 11) {
+        cases.forEach(caseElement => {
+            caseElement.classList.add('locked');
+            caseElement.setAttribute('aria-disabled', 'true');
+            caseElement.removeAttribute('href');
+        });
+        document.querySelector('.grille-calendrier').style.opacity = '0.7';
+        messageInfo.textContent = '❄️ Le calendrier de l\'Avent n\'est accessible qu\'en décembre ! Revenez plus tard...';
+        messageInfo.style.backgroundColor = '#ffebee';
+        messageInfo.style.color = '#c41e3a';
+        messageInfo.style.fontWeight = 'bold';
+    } else {
+        // Récupérer les jours déjà ouverts depuis le stockage local du navigateur
+        let joursOuverts = [];
+        try {
+            const stored = window.localStorage.getItem('calendrier-avent-ouverts');
+            if (stored) {
+                joursOuverts = JSON.parse(stored);
+            }
+        } catch (e) {
+            // Si localStorage n'est pas disponible, on utilise un tableau vide
+            console.log('LocalStorage non disponible');
+        }
+
+        // Fonction pour sauvegarder les jours ouverts
+        function sauvegarderJoursOuverts() {
+            try {
+                window.localStorage.setItem('calendrier-avent-ouverts', JSON.stringify(joursOuverts));
+            } catch (e) {
+                console.log('Impossible de sauvegarder dans localStorage');
+            }
+        }
+
+        // Initialiser l'état de chaque case
+        cases.forEach(caseElement => {
+            const jour = parseInt(caseElement.getAttribute('data-jour'));
+
+            // Si le jour est dans le futur, on le verrouille (avec cadenas)
+            if (jour > currentDay) {
+                caseElement.classList.add('locked');
+                caseElement.setAttribute('aria-disabled', 'true');
+                caseElement.removeAttribute('href');
+            }
+            // Si le jour a déjà été ouvert, on l'affiche comme ouvert
+            else if (joursOuverts.includes(jour)) {
+                caseElement.classList.add('opened');
+            }
+
+            // Ajouter un événement de clic pour les jours disponibles
+            if (jour <= currentDay) {
+                caseElement.addEventListener('click', function(e) {
+                    // Ajouter l'animation d'ouverture
+                    if (!this.classList.contains('opened')) {
+                        this.classList.add('opening');
+                    }
+
+                    // Marquer le jour comme ouvert
+                    if (!joursOuverts.includes(jour)) {
+                        joursOuverts.push(jour);
+                        sauvegarderJoursOuverts();
+                    }
+                });
+            }
+        });
+
+        // Afficher un message informatif
+        const joursDisponibles = currentDay;
+        const joursRestants = 24 - currentDay;
+
+        if (currentDay < 24) {
+            messageInfo.textContent = `🎄 ${joursDisponibles} jour${joursDisponibles > 1 ? 's' : ''} disponible${joursDisponibles > 1 ? 's' : ''} • ${joursRestants} jour${joursRestants > 1 ? 's' : ''} encore verrouillé${joursRestants > 1 ? 's' : ''}`;
+        } else {
+            messageInfo.textContent = '🎅 Tous les jours sont maintenant disponibles ! Joyeux Noël ! 🎁';
+        }
+    }
+</script>
+
+</body>
+</html>

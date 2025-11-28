@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jour 8 - Calendrier de l'Avent</title>
+    <style>
+        :root {--couleur-noel-rouge: #c41e3a;--couleur-noel-vert: #165b33;--couleur-noel-dore: #d4af37;--couleur-fond: #f8f4f0;--couleur-texte: #2c2c2c;}
+        * {margin: 0;padding: 0;box-sizing: border-box;}
+        body {font-family: 'Georgia', serif;background: linear-gradient(135deg, var(--couleur-fond) 0%, #fff5e6 100%);color: var(--couleur-texte);min-height: 100vh;display: flex;flex-direction: column;align-items: center;padding: 20px;animation: fadeIn 0.8s ease-in;}
+        .jour-container {max-width: 800px;width: 100%;background: white;border-radius: 20px;padding: 40px;box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);margin: 20px 0;border: 4px solid var(--couleur-noel-dore);}
+        .jour-header {text-align: center;margin-bottom: 30px;}
+        .jour-numero {font-size: 3rem;color: var(--couleur-noel-rouge);font-weight: bold;margin-bottom: 10px;animation: bounce 1s ease-in-out;}
+        .jour-titre {font-size: 1.8rem;color: var(--couleur-noel-vert);margin-bottom: 15px;}
+        .jour-image {width: 100%;max-width: 600px;height: auto;border-radius: 15px;margin: 20px auto;display: block;box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);min-height: 300px;object-fit: cover;}
+        .jour-contenu {text-align: center;line-height: 1.8;font-size: 1.1rem;margin: 20px 0;color: var(--couleur-texte);}
+        .jour-cadeau {background: linear-gradient(135deg, var(--couleur-noel-dore) 0%, #f4e5c2 100%);padding: 30px;border-radius: 15px;margin: 30px 0;text-align: center;box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);cursor: pointer;transition: transform 0.3s ease;}
+        .jour-cadeau:hover {transform: scale(1.02);}
+        .cadeau-titre {font-size: 1.5rem;color: var(--couleur-noel-rouge);margin-bottom: 15px;font-weight: bold;}
+        .cadeau-contenu {font-size: 1.2rem;color: var(--couleur-texte);}
+        .cadeau-icone {font-size: 3rem;margin-bottom: 10px;animation: rotate 3s ease-in-out infinite;}
+        .cadeau-code {font-size: 1.5rem;font-weight: bold;color: var(--couleur-noel-rouge);margin-top: 15px;display: none;}
+        .cadeau-code span {background: white;padding: 5px 10px;border-radius: 5px;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);display: inline-block;margin-top: 10px;}
+        .btn-retour {display: inline-block;margin-top: 30px;padding: 15px 40px;background: var(--couleur-noel-vert);color: white;text-decoration: none;border-radius: 30px;font-size: 1.1rem;font-weight: bold;transition: all 0.3s ease;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);}
+        .btn-retour:hover {background: var(--couleur-noel-rouge);transform: translateY(-3px);box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);}
+        .btn-retour:focus {outline: 4px solid var(--couleur-noel-dore);outline-offset: 4px;}
+        @keyframes fadeIn {from {opacity: 0;transform: translateY(20px);}to {opacity: 1;transform: translateY(0);}}
+        @keyframes bounce {0%, 100% {transform: translateY(0);}50% {transform: translateY(-10px);}}
+        @keyframes rotate {0%, 100% {transform: rotate(0deg);}25% {transform: rotate(-5deg);}75% {transform: rotate(5deg);}}
+        @media (max-width: 768px) {.jour-container {padding: 25px;}.jour-numero {font-size: 2.5rem;}.jour-titre {font-size: 1.5rem;}.jour-contenu {font-size: 1rem;}}
+    </style>
+</head>
+<body>
+    <div class="jour-container">
+        <header class="jour-header">
+            <div class="jour-numero">🎄 Jour 8 🎄</div>
+            <h1 class="jour-titre">Neige</h1>
+        </header>
+        <img src="jour08.jpg" alt="Neige de Noël" class="jour-image">
+        <div class="jour-contenu">
+            <p>Pour un câlin tout doux.</p>
+        </div>
+        <div class="jour-cadeau" id="cadeauContainer">
+            <div class="cadeau-icone" id="iconeCadeau">🎁</div>
+            <h2 class="cadeau-titre">Votre cadeau du jour</h2>
+            <div class="cadeau-contenu" id="contenuCadeau">
+                <p>Cliquez sur le cadeau pour découvrir votre code secret !</p>
+            </div>
+            <div class="cadeau-code" id="codeSecret">
+                Votre carte : <span>Jour 8</span>
+            </div>
+        </div>
+        <a href="index.html" class="btn-retour">Retour au calendrier</a>
+    </div>
+    <script>
+        const cadeauContainer = document.getElementById('cadeauContainer');
+        const iconeCadeau = document.getElementById('iconeCadeau');
+        const contenuCadeau = document.getElementById('contenuCadeau');
+        const codeSecret = document.getElementById('codeSecret');
+        cadeauContainer.addEventListener('click', function() {
+            contenuCadeau.style.display = 'none';
+            codeSecret.style.display = 'block';
+            iconeCadeau.textContent = '🔓';
+            iconeCadeau.style.animation = 'none';
+        });
+    </script>
+</body>
+</html>
